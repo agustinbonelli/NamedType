@@ -1,0 +1,19 @@
+image:
+  file: .Dockerfile
+
+gitConfig:
+  alias.lg : log --color --graph --pretty=format:'%Cred%h%Creset %Cgreen(%cr) - %C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit
+  pull.ff : only
+
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - name: Main
+    init: pip install conan
+    command: conan --version
+
+vscode:
+  extensions:
+    - ms-vscode.cmake-tools
+    - twxs.cmake
+    - mhutchie.git-graph
+    - eamodio.gitlens
