@@ -147,6 +147,26 @@ auto make_named_arg_function(F&& f)
 {
    return details::AnyOrderCallable<F, Args...>{std::forward<F>(f)};
 }
+
+template<template<typename> typename... Skills>
+struct Expand{
+    template<typename>
+    struct Inner{};
+};
+ 
+template< template<typename> typename Skill, template<typename> typename... Skills>
+struct Expand<Skill,Skills...>{
+    template<typename T>
+    struct Inner : public Skill<T>, Skills<T>...{};
+
+};
+
 } // namespace fluent
+
+#define TYPEDEF(T,TypeName,...) using TypeName = fluent::NamedType<T, struct TypeName##_Tag,fluent::Expand<__VA_ARGS__>::Inner>
+
+#define STRONGTYPEDEF(T,TypeName,...) TYPEDEF(T,TypeName,fluent::ImplicitlyConvertibleTo<T>::templ,fluent::Printable,fluent::Expand<__VA_ARGS__>::Inner)
+
+#define TYPEDEF_STRING(TypeName) STRONGTYPEDEF(std::string,TypeName,fluent::BinaryAddable,fluent::Comparable,fluent::Hashable,fluent::ObjectLike<std::string>::templ)
 
 #endif /* named_type_impl_h */

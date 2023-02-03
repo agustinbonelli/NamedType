@@ -1173,3 +1173,34 @@ TEST_CASE("Empty base class optimisation of skills")
     CHECK(sizeof(int) == sizeof(SkilledType<fluent::PreIncrementable>));
     CHECK(sizeof(int) == sizeof(SkilledType<fluent::PreIncrementable>));
 }
+
+
+
+TEST_CASE("StringTypedef")
+{
+    TYPEDEF_STRING(SpecialName);   
+    SpecialName n("John");
+    SpecialName n2("John");
+    SpecialName n3("Xohns");
+
+    //ImplicitlyConvertibleTo
+    std::string s = n;
+    REQUIRE( s == "John");
+
+    //Printable
+    std::ostringstream os;
+    os << n;
+    REQUIRE(os.str() == "John");
+    
+    // Comparable
+    REQUIRE( n == n2);
+    REQUIRE( n2 < n3);
+    REQUIRE( n3 > n2);
+
+    //ObjectLike
+    REQUIRE(n3->size() == 5);
+    REQUIRE(n3->at(3) == 'n');
+    REQUIRE(n3->back() == 's');
+    //std::string s2 = n + "Hello";
+    // std::string s2 = n + s;
+}

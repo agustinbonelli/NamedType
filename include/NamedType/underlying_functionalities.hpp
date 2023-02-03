@@ -423,6 +423,19 @@ struct FLUENT_EBCO Arithmetic
 {
 };
 
+template <typename T>
+struct ObjectLike
+{
+    template <typename Typedef>
+    struct templ : crtp<Typedef, templ>
+    {
+        T* operator->()
+        {
+            return std::addressof(this->underlying().get());
+        }
+    };
+};
+
 } // namespace fluent
 
 namespace std
